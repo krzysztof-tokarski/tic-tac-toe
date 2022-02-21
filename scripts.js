@@ -12,12 +12,12 @@ const gameBoard = (function () {
 
 const playerController = (function () {
     
-    const playerList = []
+    const playerList = [];
     
     const prepareGame = function (player1NameInput,player1Figure,player2NameInput) {
 
         let player1 = playerFactory(player1NameInput,player1Figure);
-        playerList.push(player1);
+        playerList[0] = player1;
 
         let player2Figure;
         
@@ -28,7 +28,7 @@ const playerController = (function () {
         }
 
         let player2 = playerFactory(player2NameInput,player2Figure);
-        playerList.push(player2);
+        playerList[1] = player2;
 
         displayController.displayBoard();
     }
@@ -75,7 +75,7 @@ const playerController = (function () {
     }
         // `${playerList[0].playerName} is playing as player 1 and has chosen ${playerList[0].player1Figure}.`
 
-    return {collectPlayerData, prepareGame, playerList}
+    return {collectPlayerData, playerList}
 
 })();
 
@@ -92,10 +92,9 @@ const displayController = (function () {
         } else {
             currentPlayer = playerController.playerList[0]
         }
+
     }
     
-
-
 
     const updateBoardState = function () {
 
@@ -114,13 +113,11 @@ const displayController = (function () {
 
             cells = Array.from(cells);
 
-            cells.forEach(cell => {cell.removeEventListener('click',updateBoardState)} )
+            cells.forEach(cell => {cell.removeEventListener('click',updateBoardState)})
+            newGame();
         }
 
     }
-
-
-
 
     const winChecker = function () {
 
@@ -149,7 +146,7 @@ const displayController = (function () {
         }
 
         if (winner != undefined) {
-            if (winner == playerController.playerList[0]) {
+            if (winner == playerController.playerList[0].playerFigure) {
                 winner = playerController.playerList[0]
             } else {
                 winner = playerController.playerList[1]
@@ -157,7 +154,6 @@ const displayController = (function () {
 
             if (playerController.playerList.includes(winner)) {
                 alert(`The Winner is ${winner.playerName} !`)
-                return winner;
             }
         }
 
@@ -166,12 +162,9 @@ const displayController = (function () {
             if (drawTest.length == 0) {
                 winner = "nobody"
                 alert("It's a draw!")
-                return winner;
             }
         }
     }
-
-
 
 
     function displayBoard () {
@@ -202,12 +195,31 @@ const displayController = (function () {
             if (!(["X","O"].includes(element)))
             boardCell.addEventListener('click',updateBoardState)
             })
+    }
 
+    function newGame () {
+        let input = window.prompt("Do you want to play again? [Y/N]")
 
+        if (input.toUpperCase() == "Y") {
+            gameBoard.boardState = [0,1,2,3,4,5,6,7,8];
+            // playerController.playerList = [];
+            currentPlayer = undefined;
+            winner = undefined;
+
+            const main = document.querySelector("main");
+        
+            while (main.firstChild) {
+                main.firstChild.remove()
+            }
+
+            playerController.collectPlayerData();
+        }
     }
     
-    return {displayBoard, currentPlayer}
+    return {displayBoard}
     })();
+
+
 
 
     playerController.collectPlayerData();
