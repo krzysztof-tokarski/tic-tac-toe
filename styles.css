@@ -1,8 +1,13 @@
+/* BASE COMPONENTS */
 
 :root {
     --background-color: #ACB0BA;
-}
+    --button-background-color: #515761;
+    --button-background-color-hover: #41454b;
+    --button-background-color-active: #050506;
+    --button-border-color: #050506;
 
+}
 
 * {
     box-sizing: border-box;
@@ -27,6 +32,10 @@ footer {
     min-height: 75px;
 }
 
+header {
+    font-size: 50px;
+}
+
 
 footer {
     display: flex;
@@ -40,12 +49,8 @@ footer img {
     height: 35px;
 }
 
-
-header {
-    font-size: 50px;
-}
-
-body > * {
+body > *,
+main > * {
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -54,16 +59,21 @@ body > * {
 
 main {
     background-color: var(--background-color);
+    display: grid;
+    grid-template-rows: 100px 1fr;
+    align-items: start;
+    gap: 50px;
 }
 
+
+/* GAME ELEMENTS */
 
 .board-container {
     display: grid;
     grid-template: repeat(3,100px) / repeat(3,100px);
-    gap:5px;
-    background-color: black;
-    /* grid-template-rows: repeat(3, 100px);
-    grid-template-columns: repeat(3,100px); */
+    gap:10px;
+    background-color: #1E2024;
+
 }
 
 .board-cell {
@@ -76,6 +86,7 @@ main {
     font-size: 75px;
     font-weight: lighter;
     user-select: none;
+    cursor: pointer;
 }
 
 
@@ -94,27 +105,103 @@ main {
     gap: 50px;
     font-weight: bold;
     font-size: 50px;
-    /* grid-template-columns: repeat(2, 100px);
-    grid-template-rows: 100px; */
+
 }
 
 .figure-selection > * {
     width: 60px;
     border-radius: 15px;
+    cursor: pointer;
 }
 
 .figure-selection > *:hover {
     background-color: aliceblue;
-    cursor: pointer;
+}
+
+#new-game-form {
+    background-color: #31313a;
+    color: white;
+    border: 5px solid white;
+    padding: 10px;
+    border-radius: 15px;
+    height: 300px;
+    width: 250px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+    align-items: center;
+    grid-template-rows: repeat(2,65px);
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    margin-left: -125px;
+    top: 50%;
+    margin-top: 50px;
+    display: none;
+}
+
+#form-container {
+    position: relative;
+}
+
+input {
+    height: 40px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 15px;
+    border: none;
+    font-family: inherit;
+    outline: none;
+}
+
+#new-game-form > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#buttonsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-message {
+    font-size: 40px;
+    color: green;
 }
 
 
 
 
+/* BUTTONS */
 
+button {
+    transition: width 5s;
+    height: 50px;
+    width: 100px;
+    border-radius: 15px;
+    font-family: inherit;
+    font-weight: inherit;
+    color: white;
+    background-color: var(--button-background-color);
+    border-color: var(--button-border-color);
+    cursor: pointer;
+    box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.637);
+}
 
+button:hover {
+    background-color: var(--button-background-color-hover);
+}
 
+button:active {
+    background-color: var(--button-background-color-active);
+}
 
+/* EXPENDABLE ON ONLINE? */
 
 script {
     display: none;

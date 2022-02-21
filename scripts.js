@@ -1,13 +1,10 @@
 
-
 const gameBoard = (function () {
 
     let boardState = [0,1,2,3,4,5,6,7,8];
 
     return {boardState}
 })();
-// Gameboard object stores gameboard as an array.
-// We only need one so its gotta be a module
 
 
 const playerController = (function () {
@@ -34,10 +31,7 @@ const playerController = (function () {
     }
 
 
-    const collectPlayerData = function () {
-        let player1NameInput = window.prompt("Player 1, enter your name: ");
-
-        let player2NameInput = window.prompt("Player 2, enter your name: ");
+    const collectPlayerData = function (player1NameInput,player2NameInput) {
 
         let figureSelectionWindow = document.createElement("div");
         figureSelectionWindow.classList.add("figure-selection-window");
@@ -66,14 +60,13 @@ const playerController = (function () {
             prepareGame(player1NameInput,player1Figure,player2NameInput);
         });
 
-        const main = document.querySelector("main");
-        main.appendChild(figureSelectionWindow);
+        const fluidContainer = document.getElementById("fluidContainer");
+        fluidContainer.appendChild(figureSelectionWindow);
     };
 
     const playerFactory = function (playerName, playerFigure) {
         return {playerName, playerFigure}
     }
-        // `${playerList[0].playerName} is playing as player 1 and has chosen ${playerList[0].player1Figure}.`
 
     return {collectPlayerData, playerList}
 
@@ -85,6 +78,28 @@ const displayController = (function () {
     let currentPlayer;
     let winner;
 
+    const submitButton = document.getElementById("submit-button");
+    submitButton.addEventListener("click",newGame);
+
+    const newGameButton = document.getElementById("new-game-button");
+    newGameButton.addEventListener("click", () => {
+        const newGameForm = document.getElementById("new-game-form");
+
+        if (newGameForm.style.display == "flex") {
+            newGameForm.style.display = "none";
+            newGameForm.reset();
+        } else {
+            newGameForm.style.display = "flex"
+        }
+
+        const fluidContainer = document.getElementById("fluidContainer");
+        while (fluidContainer.firstChild) {
+            fluidContainer.firstChild.remove()
+        }
+    });
+
+
+
     function currentPlayerSelector () {
 
         if (currentPlayer == playerController.playerList[0]) {
@@ -92,9 +107,8 @@ const displayController = (function () {
         } else {
             currentPlayer = playerController.playerList[0]
         }
-
     }
-    
+
 
     const updateBoardState = function () {
 
@@ -114,10 +128,10 @@ const displayController = (function () {
             cells = Array.from(cells);
 
             cells.forEach(cell => {cell.removeEventListener('click',updateBoardState)})
-            newGame();
         }
-
     }
+
+
 
     const winChecker = function () {
 
@@ -145,6 +159,8 @@ const displayController = (function () {
             winner = board[2];
         }
 
+
+
         if (winner != undefined) {
             if (winner == playerController.playerList[0].playerFigure) {
                 winner = playerController.playerList[0]
@@ -153,31 +169,54 @@ const displayController = (function () {
             }
 
             if (playerController.playerList.includes(winner)) {
-                alert(`The Winner is ${winner.playerName} !`)
+                        
+                const fluidContainer = document.getElementById("fluidContainer");
+            
+                while (fluidContainer.firstChild) {
+                    fluidContainer.firstChild.remove()
+                }
+
+                const victoryMessage = document.createElement("div");
+                victoryMessage.textContent = `${winner.playerName} is the winner!`
+                victoryMessage.classList.add("result-message")
+                
+                fluidContainer.appendChild(victoryMessage)
+
             }
         }
+
 
         if (winner == undefined) {
             let drawTest = board.filter(element => element != "O" && element != "X");
             if (drawTest.length == 0) {
-                winner = "nobody"
-                alert("It's a draw!")
+                const fluidContainer = document.getElementById("fluidContainer");
+            
+                while (fluidContainer.firstChild) {
+                    fluidContainer.firstChild.remove()
+                }
+
+                const drawMessage = document.createElement("div");
+                drawMessage.textContent = "It's a draw!"
+                drawMessage.classList.add("result-message")
+                
+                fluidContainer.appendChild(drawMessage);
             }
         }
     }
 
 
+
     function displayBoard () {
         
-        const main = document.querySelector("main");
+        const fluidContainer = document.getElementById("fluidContainer");
         
-        while (main.firstChild) {
-            main.firstChild.remove()
+        while (fluidContainer.firstChild) {
+            fluidContainer.firstChild.remove()
         }
             
         let boardContainer = document.createElement('div');
         boardContainer.classList.add('board-container');
-        main.appendChild(boardContainer);
+        fluidContainer.appendChild(boardContainer);
         
         let index = 0;
 
@@ -189,39 +228,37 @@ const displayController = (function () {
             boardContainer.appendChild(boardCell);
             if (element == "X") {
                 boardCell.textContent = "X"
+                boardCell.style.color = "#EF4444"
             } else if (element == "O") {
                 boardCell.textContent = "O"
+                boardCell.style.color = "#3B82F6"
             }
             if (!(["X","O"].includes(element)))
             boardCell.addEventListener('click',updateBoardState)
             })
     }
 
+    
+
     function newGame () {
-        let input = window.prompt("Do you want to play again? [Y/N]")
 
-        if (input.toUpperCase() == "Y") {
-            gameBoard.boardState = [0,1,2,3,4,5,6,7,8];
-            // playerController.playerList = [];
-            currentPlayer = undefined;
-            winner = undefined;
+        gameBoard.boardState = [0,1,2,3,4,5,6,7,8];
+        currentPlayer = undefined;
+        winner = undefined;
 
-            const main = document.querySelector("main");
-        
-            while (main.firstChild) {
-                main.firstChild.remove()
-            }
-
-            playerController.collectPlayerData();
+        const fluidContainer = document.getElementById("fluidContainer");
+    
+        while (fluidContainer.firstChild) {
+            fluidContainer.firstChild.remove()
         }
+
+        const newGameForm = document.getElementById("new-game-form");
+        newGameForm.style.display = "none"
+
+        playerController.collectPlayerData(player1NameInput.value,player2NameInput.value);
+        newGameForm.reset();
+
     }
     
     return {displayBoard}
     })();
-
-
-
-
-    playerController.collectPlayerData();
-
-// module used to control the flow of the game
