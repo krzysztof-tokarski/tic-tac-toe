@@ -33,6 +33,15 @@ const playerController = (function () {
 
     const collectPlayerData = function (player1NameInput,player2NameInput) {
 
+        
+        if (player1NameInput == '') {
+            player1NameInput = "Player 1"
+        }
+
+        if (player2NameInput == '') {
+            player2NameInput = "Player 2"
+        }
+        
         let figureSelectionWindow = document.createElement("div");
         figureSelectionWindow.classList.add("figure-selection-window");
 
